@@ -13,6 +13,36 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model Product {
+  code  String @id
+  name  String
+  image String
+  items Item[]
+}
+
+model Item {
+  id            Int     @id @default(autoincrement())
+  count         Int
+  purchasePrice Int
+  salePrice     Int
+  product       Product @relation(fields: [productCode], references: [code])
+  productCode   String
+}
+
+model Shareholder {
+  id     Int     @id @default(autoincrement())
+  name   String
+  stocks Share[]
+}
+
+model Share {
+  id            Int         @id @default(autoincrement())
+  quote         Int
+  count         Int
+  shareholder   Shareholder @relation(fields: [shareholderId], references: [id])
+  shareholderId Int
+}
+
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique

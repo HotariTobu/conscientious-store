@@ -8,6 +8,8 @@
 - 商品在庫の管理
 - JANコード
 
+https://www.google.com/search?q=4902402898642
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
