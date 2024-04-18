@@ -8,6 +8,7 @@ import { quote } from "@/constants.json"
 import { revalidatePath } from "next/cache"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { ShareList } from "./components/share-list"
+import { Form } from "@/components/form"
 
 const paramsSchema = z.object({
   id: z.coerce.number().int().gt(0)
@@ -47,14 +48,14 @@ export default async (props: unknown) => {
       <div>
         {shareholder.name}
       </div>
-      <form action={createShare}>
+      <Form action={createShare}>
         <div className="flex">
           {quote}
           <Cross1Icon />
           <Input name="count" type="number" required min={1} />株
         </div>
         <SubmitButton>買う</SubmitButton>
-      </form>
+      </Form>
       <div>
         <ShareList shareholderId={shareholder.id} />
       </div>
