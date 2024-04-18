@@ -21,12 +21,13 @@ model Product {
 }
 
 model Item {
-  id            Int     @id @default(autoincrement())
-  count         Int
-  purchasePrice Int
-  salePrice     Int
-  product       Product @relation(fields: [productCode], references: [code])
-  productCode   String
+  id               Int     @id @default(autoincrement())
+  purchaseQuantity Int
+  soldQuantity     Int
+  purchasePrice    Int
+  salePrice        Int
+  product          Product @relation(fields: [productCode], references: [code])
+  productCode      String
 }
 
 model Shareholder {
@@ -43,34 +44,14 @@ model Share {
   shareholderId Int
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
-}
-
-model Profile {
-  id     Int    @id @default(autoincrement())
-  bio    String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
-}
-
 model Post {
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  title      String
-  published  Boolean    @default(false)
-  author     User       @relation(fields: [authorId], references: [id])
-  authorId   Int
-  categories Category[]
-}
+  id    String @id @default(uuid())
+  title String
+  text  String
 
-model Category {
-  id    Int    @id @default(autoincrement())
-  name  String
-  posts Post[]
+  // To return `Date`s intact through the API we use transformers
+  // https://trpc.io/docs/v11/data-transformers
+  // This is unique so it can be used for cursor-based pagination
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }

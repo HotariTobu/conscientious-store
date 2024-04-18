@@ -1,4 +1,4 @@
-import CardLink from "@/components/card-link";
+import { CardLink } from "@/components/card-link";
 
 export default function Home() {
   return (

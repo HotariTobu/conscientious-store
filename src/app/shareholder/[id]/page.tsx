@@ -9,13 +9,14 @@ import { revalidatePath } from "next/cache"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { ShareList } from "./components/share-list"
 import { Form } from "@/components/form"
+import { schemas } from "@/lib/schemas"
 
 const paramsSchema = z.object({
-  id: z.coerce.number().int().gt(0)
+  id: schemas.shareholder.id
 })
 
 const formSchema = z.object({
-  count: z.coerce.number().int().gt(0)
+  count: schemas.share.count
 })
 
 export default async (props: unknown) => {

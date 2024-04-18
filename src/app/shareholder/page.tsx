@@ -6,12 +6,13 @@ import { parseFormData } from "@/utils/parseFormData";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { Form } from "@/components/form";
+import { schemas } from "@/lib/schemas";
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: schemas.shareholder.name,
 })
 
-export default function Shareholder() {
+export default () => {
   const createShareholder = async (formData: FormData) => {
     'use server'
     const { name } = parseFormData(formSchema, formData)

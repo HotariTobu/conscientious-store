@@ -1,4 +1,4 @@
-export default function Buy() {
+export default () => {
   return (
     <div>buy</div>
   )

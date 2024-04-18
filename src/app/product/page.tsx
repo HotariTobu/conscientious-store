@@ -2,12 +2,13 @@ import { Form } from "@/components/form"
 import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { prisma } from "@/lib/prisma"
+import { schemas } from "@/lib/schemas"
 import { parseFormData } from "@/utils/parseFormData"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 
 const formSchema = z.object({
-  code: z.string().min(1)
+  code: schemas.product.code
 })
 
 export default () => {
@@ -20,7 +21,7 @@ export default () => {
       }
     })
     if (product === null) {
-      redirect('/product/create')
+      redirect(`/product/create?c=${code}`)
     }
     else {
 
