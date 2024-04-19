@@ -29,5 +29,12 @@ export const itemRouter = router({
           }
         })
       })
-    })
+    }),
+  list: publicProcedure
+    .input(z.object({
+      productCodeSet: z.set(schemas.product.code),
+    }))
+    .mutation(opts => {
+
+  })
 })
