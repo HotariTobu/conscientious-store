@@ -36,9 +36,9 @@ export const ItemRow = (props: {
     <div className="flex">
       <ProductForm code={props.productCode} />
       <form onChange={handleChange} ref={formRef}>
-        <NumberInput name="purchaseQuantity" placeholder="仕入れ数量" defaultValue={0} integer />
-        <NumberInput name="purchasePrice" placeholder="仕入れ値" defaultValue={0} integer />円
-        <NumberInput name="salePrice" placeholder="売り値" defaultValue={0} integer />円
+        <NumberInput name="purchaseQuantity" placeholder="仕入れ数量" integer />
+        <NumberInput name="purchasePrice" placeholder="仕入れ値" integer />円
+        <NumberInput name="salePrice" placeholder="売り値" integer />円
       </form>
     </div>
   )
