@@ -6,7 +6,7 @@ import { parseFormData } from "@/utils/parseFormData";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { Form } from "@/components/form";
-import { schemas } from "@/lib/schemas";
+import { schemas } from "@/lib/prisma/schemas";
 
 const formSchema = z.object({
   name: schemas.shareholder.name,

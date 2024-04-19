@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { ShareList } from "./components/share-list"
 import { Form } from "@/components/form"
-import { schemas } from "@/lib/schemas"
+import { schemas } from "@/lib/prisma/schemas"
 
 const paramsSchema = z.object({
   id: schemas.shareholder.id
@@ -21,7 +21,7 @@ const formSchema = z.object({
 
 export default async (props: unknown) => {
   const { id } = parsePageParams(paramsSchema, props)
-  const shareholder = await prisma.shareholder.findFirstOrThrow({
+  const shareholder = await prisma.shareholder.findUniqueOrThrow({
     where: {
       id,
     },

@@ -2,7 +2,7 @@ import { Form } from "@/components/form"
 import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { prisma } from "@/lib/prisma"
-import { schemas } from "@/lib/schemas"
+import { schemas } from "@/lib/prisma/schemas"
 import { parseFormData } from "@/utils/parseFormData"
 import { redirect } from "next/navigation"
 import { z } from "zod"
@@ -15,7 +15,7 @@ export default () => {
   const inputProductCode = async (formData: FormData) => {
     'use server'
     const { code } = parseFormData(formSchema, formData)
-    const product = await prisma.product.findFirst({
+    const product = await prisma.product.findUnique({
       where: {
         code
       }
