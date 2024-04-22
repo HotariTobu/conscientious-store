@@ -1,13 +1,14 @@
 'use client'
 
 import { trpc } from "@/lib/trpc/client"
-import { Cross1Icon } from "@radix-ui/react-icons"
 import NextError from 'next/error';
 
-export const ShareList = (props: {
+export const ShareholderProfile = (props: {
   shareholderId: number
 }) => {
-  const { error, isLoading, data } = trpc.share.list.useQuery(props)
+  const { error, isLoading, data } = trpc.shareholder.byId.useQuery({
+    id: props.shareholderId
+  })
 
   if (error !== null) {
     return (
@@ -24,13 +25,7 @@ export const ShareList = (props: {
 
   return (
     <div>
-      {data.shares.map(share => (
-        <div className="flex" key={share.id}>
-          {share.quote}
-          <Cross1Icon />
-          {share.count}
-        </div>
-      ))}
+      {data.name}
     </div>
   )
 }

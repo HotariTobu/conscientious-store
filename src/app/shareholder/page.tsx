@@ -1,39 +1,15 @@
-import { Input } from "@/components/ui/input";
+import { ShareholderCreateForm } from "./components/shareholder-create-form";
 import { ShareholderList } from "./components/shareholder-list";
-import { SubmitButton } from "@/components/submit-button";
-import { z } from "zod";
-import { parseFormData } from "@/utils/parseFormData";
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { Form } from "@/components/form";
-import { schemas } from "@/lib/prisma/schemas";
 
-const formSchema = z.object({
-  name: schemas.shareholder.name,
-})
-
-export default () => {
-  const createShareholder = async (formData: FormData) => {
-    'use server'
-    const { name } = parseFormData(formSchema, formData)
-    const shareholder = await prisma.shareholder.create({
-      data: {
-        name
-      }
-    })
-    console.log("Created shareholder:", shareholder)
-    revalidatePath('')
-  }
-
+export default async () => {
   return (
     <div>
-      <Form action={createShareholder}>
-        <Input name="name" required placeholder="株主名" />
-        <SubmitButton>追加</SubmitButton>
-      </Form>
+      <ShareholderCreateForm />
       <div>
-        株主たち
-        <ShareholderList />
+        <div>株主たち</div>
+        <div>
+          <ShareholderList />
+        </div>
       </div>
     </div>
   )
