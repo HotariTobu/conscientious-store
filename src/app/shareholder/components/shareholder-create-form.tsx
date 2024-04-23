@@ -2,16 +2,14 @@
 
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/submit-button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { trpc } from "@/lib/trpc/client";
 import { shareholderAddSchema } from "@/server/routers/shareholder/schemas";
+import { useZodForm } from "@/hooks/useZodForm";
 
 export const ShareholderCreateForm = () => {
-  const form = useForm<z.infer<typeof shareholderAddSchema>>({
-    resolver: zodResolver(shareholderAddSchema),
+  const form = useZodForm({
+    schema: shareholderAddSchema,
     defaultValues: {
       name: '',
     },
@@ -27,7 +25,7 @@ export const ShareholderCreateForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(values => mutate(values))} className="space-y-8">
+      <form className="space-y-4" onSubmit={form.handleSubmit(values => mutate(values))}>
         <FormField
           control={form.control}
           name="name"

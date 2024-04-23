@@ -1,12 +1,14 @@
 'use client'
 
 import { useRef, useState } from "react"
-import { ItemRow, SetItemProps } from "./components/item-row"
 import { useCodeReader } from "@/hooks/useCodeReader"
-import { ItemProps } from "@/server/routers/item/schemas"
 import { Button } from "@/components/ui/button"
 import { trpc } from "@/lib/trpc/client"
 import { useRouter } from "next/navigation"
+import { ProductArea } from "./components/product-area"
+import { ItemForm, ItemProps, defaultItemProps } from "./components/item-form"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { ProductCodeForm } from "./components/product-code-form"
 
 export default () => {
   const router = useRouter()
@@ -16,26 +18,42 @@ export default () => {
     itemPropsMap: new Map<string, ItemProps>()
   })
 
-  useCodeReader(code => {
-    console.log('code-reader:', code)
+  const addProductCode = (productCode: string) => {
     setProductCodeSet(prevProductCodeSet => new Set([
       ...prevProductCodeSet,
-      code,
+      productCode,
     ]))
+  }
+
+  const removeProductCode = (productCode: string) => {
+    setProductCodeSet(prevProductCodeSet => new Set([
+      ...Array.from(prevProductCodeSet)
+        .filter(code => code !== productCode),
+    ]))
+  }
+
+  const updateItemProps = (productCode: string, itemProps: ItemProps) => {
+    ref.current.itemPropsMap.set(productCode, itemProps)
+  }
+
+  useCodeReader(productCode => {
+    console.log('code-reader:', productCode)
+    addProductCode(productCode)
   })
 
-  const itemPurchaseMutation = trpc.item.purchase.useMutation({
-    onSuccess: () => {
+  const utils = trpc.useUtils()
+  const { mutate } = trpc.item.addMany.useMutation({
+    onSuccess: async () => {
+      await utils.item.invalidate()
       router.push('/')
-    }
+    },
   })
 
   const handleSubmit = () => {
-    const { itemPropsMap } = ref.current
-    itemPurchaseMutation.mutate({
-      productCodeSet,
-      itemPropsMap,
-    })
+    mutate(Array.from(productCodeSet).map(productCode => ({
+      productCode,
+      ...(ref.current.itemPropsMap.get(productCode) ?? defaultItemProps)
+    })))
   }
 
   return (
@@ -43,15 +61,22 @@ export default () => {
       <div>
         仕入れ
       </div>
-      {Array.from(productCodeSet).map(code => {
-        const setItemProps: SetItemProps = itemProps => {
-          ref.current.itemPropsMap.set(code, itemProps)
-        }
-
-        return (
-          <ItemRow key={code} productCode={code} setItemProps={setItemProps} />
-        )
-      })}
+      <Dialog>
+        <DialogTrigger>
+          商品コードが読み取れない場合
+        </DialogTrigger>
+        <DialogContent>
+          <ProductCodeForm onSubmit={addProductCode} />
+        </DialogContent>
+      </Dialog>
+      <div>
+        {Array.from(productCodeSet).map(productCode => (
+          <div className="flex" key={productCode}>
+            <ProductArea productCode={productCode} onDelete={() => removeProductCode(productCode)} />
+            <ItemForm onChange={itemProps => updateItemProps(productCode, itemProps)} />
+          </div>
+        ))}
+      </div>
       <Button onClick={handleSubmit}>仕入れを確定する</Button>
     </div>
   )

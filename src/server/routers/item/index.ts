@@ -1,50 +1,31 @@
 import { publicProcedure, router } from "../../trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
-import { itemAddSchema, itemByIdSchema, itemListSchema } from "./schemas";
-
-// export const itemRouter = router({
-//   purchase: publicProcedure
-//     .input(itemPurchaseSchema)
-//     .mutation(async ({ input }) => {
-//       const { } = await prisma.item.createMany({
-//         data: Array.from(productCodeSet).map(productCode => {
-//           const itemProps = itemPropsMap.get(productCode)
-//           if (typeof itemProps === 'undefined') {
-//             throw new TRPCError({
-//               code: 'BAD_REQUEST',
-//               message: `No itemProps for the product with code '${productCode}'`,
-//             });
-//           }
-//           return {
-//             ...itemProps,
-//             productCode,
-//           }
-//         })
-//       })
-//     }),
-//   list: publicProcedure
-//     .input(z.object({
-//     }))
-//     .mutation(async ({ input }) => {
-
-//     })
-// })
-
+import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemFirstByProductCodeSchema, itemListSchema } from "./schemas";
 
 export const itemRouter = router({
   list: publicProcedure
     .input(itemListSchema)
     .query(async ({ input }) => {
-      const limit = input.limit ?? 50;
-      const { productCode, cursor } = input;
+      const { productCode, inStockOnly, limit, cursor } = input;
 
       const items = await prisma.item.findMany({
-        where: { productCode },
+        where: {
+          productCode,
+          ...(inStockOnly ? {
+            soldQuantity: {
+              lt: prisma.item.fields.purchaseQuantity,
+            }
+          } : {})
+        },
         take: limit + 1,
-        cursor,
+        ...(cursor === null ? {} : {
+          cursor: {
+            id: cursor
+          }
+        })
       })
-      const nextCursor = itemListSchema.shape.cursor.parse(items.at(limit))
+      const nextCursor = items.at(limit)?.id
 
       return {
         items,
@@ -67,10 +48,35 @@ export const itemRouter = router({
 
       return item;
     }),
+  firstByProductCode: publicProcedure
+    .input(itemFirstByProductCodeSchema)
+    .query(async ({ input }) => {
+      const item = await prisma.item.findFirst({
+        where: input,
+      });
+
+      if (item === null) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No item with productCode '${input.productCode}'`,
+        });
+      }
+
+      return item;
+    }),
   add: publicProcedure
     .input(itemAddSchema)
     .mutation(async ({ input }) => {
       const item = await prisma.item.create({
+        data: input,
+      });
+
+      return item;
+    }),
+  addMany: publicProcedure
+    .input(itemAddManySchema)
+    .mutation(async ({ input }) => {
+      const item = await prisma.item.createMany({
         data: input,
       });
 

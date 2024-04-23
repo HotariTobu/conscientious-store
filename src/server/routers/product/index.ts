@@ -7,11 +7,12 @@ export const productRouter = router({
   byCode: publicProcedure
     .input(productByCodeSchema)
     .query(async ({ input }) => {
+      const { errorOnNotFound, ...where } = input
       const product = await prisma.product.findUnique({
-        where: input
+        where
       })
 
-      if (product === null) {
+      if (product === null && errorOnNotFound === true) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: `No product with code '${input.code}'`,

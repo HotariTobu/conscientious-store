@@ -1,76 +1,67 @@
-`use client`
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/submit-button"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { useZodForm } from "@/hooks/useZodForm"
 import { trpc } from "@/lib/trpc/client"
-import { useEffect, useState } from "react";
+import { productAddSchema } from "@/server/routers/product/schemas"
 
-export const ProductForm = ({ code }: {
-  code: string
+export const ProductForm = (props: {
+  productCode: string
 }) => {
-  const [name, setName] = useState('')
-  const [image, setImage] = useState('')
-
-  const { data: product } = trpc.product.byCode.useQuery({
-    code
+  const form = useZodForm({
+    schema: productAddSchema,
+    defaultValues: {
+      code: props.productCode,
+      name: '',
+      image: '',
+    },
   })
 
-  useEffect(() => {
-    if (typeof product === 'undefined') {
-      return
-    }
-
-    if (product === null) {
-      open(`https://www.google.com/search?q=${code}`, '_blank')
-      return
-    }
-
-    setName(product.name)
-    setImage(product.image)
-  }, [product])
-
-  const utils = trpc.useUtils();
-
-  const productAddMutation = trpc.product.add.useMutation({
-    async onSuccess() {
-      await utils.product.byCode.invalidate();
+  const utils = trpc.useUtils()
+  const { mutate } = trpc.product.add.useMutation({
+    onSuccess: async () => {
+      await utils.product.invalidate()
     }
   })
-  const handleAdd = () => {
-    productAddMutation.mutate({
-      code,
-      name,
-      image,
-    })
-  }
-
-  const productUpdateMutation = trpc.product.update.useMutation({
-    async onSuccess() {
-      await utils.product.byCode.invalidate();
-    }
-  })
-  const handleUpdate = () => {
-    productUpdateMutation.mutate({
-      code,
-      name,
-      image,
-    })
-  }
-
-  if (typeof product === 'undefined') {
-    return
-  }
 
   return (
-    <div>
-      <Input placeholder="商品名" value={name} onChange={e => setName(e.target.value)} />
-      <Input placeholder="画像URL" value={image} onChange={e => setImage(e.target.value)} />
-      <img src={image} />
-      {product === null ? (
-        <Button onClick={handleAdd}>登録する</Button>
-      ) : (
-        <Button onClick={handleUpdate}>更新する</Button>
-      )}
-    </div>
+    <Form {...form}>
+      <form className="space-y-4" onSubmit={form.handleSubmit(values => mutate(values))}>
+        <Button className="px-0" variant='link' asChild>
+          <a href={`https://www.google.com/search?q=${props.productCode}`} target="_blank" rel="noopener noreferrer">新しいタブで検索する</a>
+        </Button>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>商品名</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>画像URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <img className="mx-auto max-h-[40vh]" src={form.getValues('image')} />
+        <SubmitButton>登録する</SubmitButton>
+      </form>
+    </Form>
   )
 }

@@ -22,10 +22,10 @@ model Product {
 
 model Item {
   id               Int     @id @default(autoincrement())
-  purchaseQuantity Int
-  soldQuantity     Int     @default(0)
   purchasePrice    Int
   salePrice        Int
+  purchaseQuantity Int
+  soldQuantity     Int     @default(0)
   product          Product @relation(fields: [productCode], references: [code])
   productCode      String
 }

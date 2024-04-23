@@ -1,13 +1,15 @@
 'use client'
 
 import { PropsWithChildren } from 'react'
+import { Button, ButtonProps } from './ui/button'
 import { useFormStatus } from 'react-dom'
-import { Button } from './ui/button'
+import { useFormState } from 'react-hook-form'
 
-export const SubmitButton = ({ children }: PropsWithChildren) => {
+export const SubmitButton = (props: ButtonProps) => {
+  const { disabled, isValid } = useFormState()
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending}>{children}</Button>
+    <Button type="submit" disabled={disabled || !isValid || pending} {...props} />
   )
 }

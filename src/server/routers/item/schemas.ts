@@ -14,10 +14,15 @@ export const itemSchema = z.object({
 
 export const itemListSchema = paginationSchema.extend({
   productCode: productSchema.shape.code.optional(),
+  inStockOnly: z.boolean().optional().default(true),
 })
 
 export const itemByIdSchema = itemSchema.pick({
   id: true
+})
+
+export const itemFirstByProductCodeSchema = itemSchema.pick({
+  productCode: true
 })
 
 export const itemAddSchema = itemSchema.omit({
@@ -25,10 +30,4 @@ export const itemAddSchema = itemSchema.omit({
   soldQuantity: true,
 })
 
-
-// export const itemPurchaseSchema = z.map(
-//   productSchema.shape.code,
-//   itemAddSchema.omit({
-//     productCode: true,
-//   })
-// )
+export const itemAddManySchema = itemAddSchema.array()

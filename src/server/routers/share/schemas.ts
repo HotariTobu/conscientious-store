@@ -11,7 +11,7 @@ export const shareSchema = z.object({
 } satisfies FieldSchemas<Prisma.ShareFieldRefs>)
 
 export const shareListSchema = paginationSchema.extend({
-  shareholderId: shareholderSchema.shape.id
+  shareholderId: shareholderSchema.shape.id.optional(),
 })
 
 export const shareByIdSchema = shareSchema.pick({

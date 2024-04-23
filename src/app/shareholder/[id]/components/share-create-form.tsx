@@ -2,19 +2,17 @@
 
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/submit-button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { trpc } from "@/lib/trpc/client";
 import { shareAddSchema } from "@/server/routers/share/schemas";
 import constants from "@/constants.json"
+import { useZodForm } from "@/hooks/useZodForm";
 
 export const ShareCreateForm = (props: {
   shareholderId: number
 }) => {
-  const form = useForm<z.infer<typeof shareAddSchema>>({
-    resolver: zodResolver(shareAddSchema),
+  const form = useZodForm({
+    schema: shareAddSchema,
     defaultValues: {
       quote: constants.quote,
       count: 1,
@@ -32,7 +30,7 @@ export const ShareCreateForm = (props: {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(values => mutate(values))} className="space-y-8">
+      <form className="space-y-4" onSubmit={form.handleSubmit(values => mutate(values))}>
         <FormField
           control={form.control}
           name="count"

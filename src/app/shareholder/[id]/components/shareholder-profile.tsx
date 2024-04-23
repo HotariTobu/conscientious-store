@@ -6,7 +6,7 @@ import NextError from 'next/error';
 export const ShareholderProfile = (props: {
   shareholderId: number
 }) => {
-  const { error, isLoading, data } = trpc.shareholder.byId.useQuery({
+  const { error, isLoading, data: shareholder } = trpc.shareholder.byId.useQuery({
     id: props.shareholderId
   })
 
@@ -25,7 +25,7 @@ export const ShareholderProfile = (props: {
 
   return (
     <div>
-      {data.name}
+      {shareholder.name}
     </div>
   )
 }

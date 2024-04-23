@@ -11,7 +11,9 @@ export const productSchema = z.object({
 // export const productListSchema = paginationSchema
 
 export const productByCodeSchema = productSchema.pick({
-  code: true
+  code: true,
+}).extend({
+  errorOnNotFound: z.boolean().optional(),
 })
 
 export const productAddSchema = productSchema

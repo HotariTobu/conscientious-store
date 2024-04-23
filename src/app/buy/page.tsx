@@ -1,13 +1,10 @@
 'use client'
 
 import { useCodeReader } from "@/hooks/useCodeReader"
-import { schemas } from "@/lib/prisma/schemas"
 import { useState } from "react"
 import { z } from "zod"
 
 const cartItemSchema = z.object({
-  productCode: schemas.product.code
-
 })
 
 type CartItem = {
@@ -18,7 +15,7 @@ type CartItemsAction = {
 
 }
 
-const cartItemsReducer = (state)
+const cartItemsReducer = () => { }
 
 export default () => {
   useCodeReader(console.log)
