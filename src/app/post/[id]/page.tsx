@@ -1,11 +1,10 @@
 'use client'
 
-import NextError from 'next/error';
 import Link from 'next/link';
-
 import { trpc } from '@/lib/trpc/client';
 import { useParams } from 'next/navigation';
 import { z } from 'zod';
+import { TRPCError } from '@/components/trpc-error';
 
 function PostItem(props: { post: any }) {
   const { post } = props;
@@ -39,10 +38,7 @@ const PostViewPage = () => {
 
   if (postQuery.error) {
     return (
-      <NextError
-        title={postQuery.error.message}
-        statusCode={postQuery.error.data?.httpStatus ?? 500}
-      />
+      <TRPCError error={error} />
     );
   }
 

@@ -1,14 +1,13 @@
 'use client'
 
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { useCodeReader } from "@/hooks/useCodeReader"
 import { Button } from "@/components/ui/button"
 import { trpc } from "@/lib/trpc/client"
 import { useRouter } from "next/navigation"
 import { ProductArea } from "./components/product-area"
 import { ItemForm, ItemProps, defaultItemProps } from "./components/item-form"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { ProductCodeForm } from "./components/product-code-form"
+import { ProductCodeDialog } from "../product/components/product-code-dialog"
 
 export default () => {
   const router = useRouter()
@@ -18,19 +17,19 @@ export default () => {
     itemPropsMap: new Map<string, ItemProps>()
   })
 
-  const addProductCode = (productCode: string) => {
+  const addProductCode = useCallback((productCode: string) => {
     setProductCodeSet(prevProductCodeSet => new Set([
       ...prevProductCodeSet,
       productCode,
     ]))
-  }
+  }, [setProductCodeSet])
 
-  const removeProductCode = (productCode: string) => {
+  const removeProductCode = useCallback((productCode: string) => {
     setProductCodeSet(prevProductCodeSet => new Set([
       ...Array.from(prevProductCodeSet)
         .filter(code => code !== productCode),
     ]))
-  }
+  }, [setProductCodeSet])
 
   const updateItemProps = (productCode: string, itemProps: ItemProps) => {
     ref.current.itemPropsMap.set(productCode, itemProps)
@@ -61,14 +60,7 @@ export default () => {
       <div>
         仕入れ
       </div>
-      <Dialog>
-        <DialogTrigger>
-          商品コードが読み取れない場合
-        </DialogTrigger>
-        <DialogContent>
-          <ProductCodeForm onSubmit={addProductCode} />
-        </DialogContent>
-      </Dialog>
+      <ProductCodeDialog onProductCodeSubmit={addProductCode} />
       <div>
         {Array.from(productCodeSet).map(productCode => (
           <div className="flex" key={productCode}>

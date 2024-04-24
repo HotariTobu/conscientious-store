@@ -1,12 +1,12 @@
 import { z } from "zod"
-import { FieldSchemas, paginationSchema } from "../schemas"
-import { Prisma } from "@prisma/client"
+import { FieldSchemas, listSchema } from "../schemas"
+import { Product } from "@prisma/client"
 
 export const productSchema = z.object({
   code: z.string().regex(/^\d+$/),
   name: z.string().min(1),
   image: z.string().url(),
-} satisfies FieldSchemas<Prisma.ProductFieldRefs>)
+} satisfies FieldSchemas<Product>)
 
 // export const productListSchema = paginationSchema
 

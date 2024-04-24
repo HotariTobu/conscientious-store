@@ -2,8 +2,8 @@
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc/client"
-import NextError from 'next/error';
 import { ProductForm } from "./product-form";
+import { TRPCError } from "@/components/trpc-error";
 
 export const ProductArea = (props: {
   productCode: string
@@ -15,10 +15,7 @@ export const ProductArea = (props: {
 
   if (error !== null) {
     return (
-      <NextError
-        title={error.message}
-        statusCode={error.data?.httpStatus ?? 500}
-      />
+      <TRPCError error={error} />
     )
   }
 

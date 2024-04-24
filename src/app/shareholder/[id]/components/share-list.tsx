@@ -1,8 +1,8 @@
 'use client'
 
+import { TRPCError } from "@/components/trpc-error"
 import { trpc } from "@/lib/trpc/client"
 import { Cross1Icon } from "@radix-ui/react-icons"
-import NextError from 'next/error';
 
 export const ShareList = (props: {
   shareholderId: number
@@ -11,10 +11,7 @@ export const ShareList = (props: {
 
   if (error !== null) {
     return (
-      <NextError
-        title={error.message}
-        statusCode={error.data?.httpStatus ?? 500}
-      />
+      <TRPCError error={error} />
     )
   }
 

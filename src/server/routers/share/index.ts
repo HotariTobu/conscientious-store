@@ -7,18 +7,20 @@ export const shareRouter = router({
   list: publicProcedure
     .input(shareListSchema)
     .query(async ({ input }) => {
-      const { shareholderId, limit, cursor } = input;
+      const { shareholderId, cursor, skip, limit } = input;
 
       const shares = await prisma.share.findMany({
         where: { shareholderId },
-        take: limit + 1,
+
         ...(cursor === null ? {} : {
           cursor: {
             id: cursor
           }
-        })
+        }),
+        skip,
+        take: limit + 1,
       })
-      const nextCursor = shares.at(limit)?.id
+      const nextCursor = limit < shares.length ? shares.pop()?.id : null
 
       return {
         shares,

@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { FieldSchemas, idSchema, paginationSchema, positiveIntegerSchema } from "../schemas"
-import { Prisma } from "@prisma/client"
+import { FieldSchemas, idSchema, listSchema, positiveIntegerSchema } from "../schemas"
+import { Share } from "@prisma/client"
 import { shareholderSchema } from "../shareholder/schemas"
 
 export const shareSchema = z.object({
@@ -8,9 +8,9 @@ export const shareSchema = z.object({
   count: positiveIntegerSchema,
   quote: positiveIntegerSchema,
   shareholderId: shareholderSchema.shape.id
-} satisfies FieldSchemas<Prisma.ShareFieldRefs>)
+} satisfies FieldSchemas<Share>)
 
-export const shareListSchema = paginationSchema.extend({
+export const shareListSchema = listSchema.extend({
   shareholderId: shareholderSchema.shape.id.optional(),
 })
 

@@ -1,7 +1,7 @@
 'use client'
 
+import { TRPCError } from "@/components/trpc-error";
 import { trpc } from "@/lib/trpc/client"
-import NextError from 'next/error';
 import Link from "next/link";
 
 export const ShareholderList = () => {
@@ -9,10 +9,7 @@ export const ShareholderList = () => {
 
   if (error !== null) {
     return (
-      <NextError
-        title={error.message}
-        statusCode={error.data?.httpStatus ?? 500}
-      />
+      <TRPCError error={error} />
     )
   }
 

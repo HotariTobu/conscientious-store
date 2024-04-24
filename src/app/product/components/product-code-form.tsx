@@ -13,8 +13,10 @@ const formSchema = productSchema.pick({
 
 type FieldValues = z.infer<typeof formSchema>
 
+export type OnProductCodeSubmit = (productCode: string) => void
+
 export const ProductCodeForm = (props: {
-  onSubmit: (productCode: string) => void
+  onProductCodeSubmit: OnProductCodeSubmit
 }) => {
   const form = useZodForm({
     schema: formSchema,
@@ -25,7 +27,7 @@ export const ProductCodeForm = (props: {
 
   const handleSubmit = (values: FieldValues) => {
     form.reset()
-    props.onSubmit(values.code)
+    props.onProductCodeSubmit(values.code)
   }
 
   return (

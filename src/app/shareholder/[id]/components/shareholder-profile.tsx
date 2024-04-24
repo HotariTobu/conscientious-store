@@ -1,7 +1,7 @@
 'use client'
 
+import { TRPCError } from "@/components/trpc-error";
 import { trpc } from "@/lib/trpc/client"
-import NextError from 'next/error';
 
 export const ShareholderProfile = (props: {
   shareholderId: number
@@ -12,10 +12,7 @@ export const ShareholderProfile = (props: {
 
   if (error !== null) {
     return (
-      <NextError
-        title={error.message}
-        statusCode={error.data?.httpStatus ?? 500}
-      />
+      <TRPCError error={error} />
     )
   }
 

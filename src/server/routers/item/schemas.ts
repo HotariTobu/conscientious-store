@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { FieldSchemas, idSchema, paginationSchema, positiveIntegerSchema } from "../schemas"
-import { Prisma } from "@prisma/client"
+import { FieldSchemas, idSchema, listSchema, positiveIntegerSchema } from "../schemas"
+import { Item } from "@prisma/client"
 import { productSchema } from "../product/schemas"
 
 export const itemSchema = z.object({
@@ -10,12 +10,17 @@ export const itemSchema = z.object({
   purchasePrice: positiveIntegerSchema,
   salePrice: positiveIntegerSchema,
   productCode: productSchema.shape.code
-} satisfies FieldSchemas<Prisma.ItemFieldRefs>)
+} satisfies FieldSchemas<Item>)
 
-export const itemListSchema = paginationSchema.extend({
+export const itemListSchema = listSchema.extend({
   productCode: productSchema.shape.code.optional(),
   inStockOnly: z.boolean().optional().default(true),
 })
+
+export const itemForBuySchema = z.object({
+  productCode: productSchema.shape.code,
+  countInCart: z.number().int().min(0),
+}).array()
 
 export const itemByIdSchema = itemSchema.pick({
   id: true

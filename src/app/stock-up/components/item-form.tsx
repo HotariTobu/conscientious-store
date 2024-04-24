@@ -26,7 +26,7 @@ export const ItemForm = (props: {
 
   return (
     <Form {...form}>
-      <form className="gap-2 flex" onSubmit={form.handleSubmit(props.onChange)}>
+      <form className="gap-2 flex" onChange={() => props.onChange(form.getValues())}>
         <FormField
           control={form.control}
           name="purchaseQuantity"
