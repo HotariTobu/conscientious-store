@@ -1,9 +1,49 @@
 import { publicProcedure, router } from "../../trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
-import { productAddSchema, productByCodeSchema, productUpdateSchema } from "./schemas";
+import { productAddSchema, productByCodeSchema, productListWithItemsSchema, productUpdateSchema } from "./schemas";
 
 export const productRouter = router({
+  listWithItems: publicProcedure
+    .input(productListWithItemsSchema)
+    .query(async ({ input }) => {
+      const { excludeDeleted, cursor, skip, limit } = input;
+
+      const products = await prisma.product.findMany({
+        where: {
+          ...(excludeDeleted ? {
+            deletedAt: null,
+          } : {}),
+        },
+        ...(cursor === null ? {} : {
+          cursor: {
+            code: cursor
+          }
+        }),
+        include: {
+          items: {
+            where: {
+              ...(excludeDeleted ? {
+                deletedAt: null,
+              } : {}),
+            }
+          },
+        },
+
+        skip,
+        take: limit + 1,
+
+        orderBy: {
+          createdAt: 'asc'
+        },
+      })
+      const nextCursor = limit < products.length ? products.pop()?.code : null
+
+      return {
+        products,
+        nextCursor,
+      };
+    }),
   byCode: publicProcedure
     .input(productByCodeSchema)
     .query(async ({ input }) => {

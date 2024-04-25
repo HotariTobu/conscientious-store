@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client"
+import { prismaSoftDeleteExtension } from "./prismaSoftDeleteExtension"
 
 export const prisma = new PrismaClient()
+  .$extends(prismaSoftDeleteExtension)
 
 
 

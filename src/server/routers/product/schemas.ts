@@ -8,7 +8,11 @@ export const productSchema = z.object({
   image: z.string().url(),
 } satisfies FieldSchemas<Product>)
 
-// export const productListSchema = paginationSchema
+export const productListWithItemsSchema = listSchema.omit({
+  cursor: true,
+}).extend({
+  cursor: productSchema.shape.code.nullish().default(null),
+})
 
 export const productByCodeSchema = productSchema.pick({
   code: true,

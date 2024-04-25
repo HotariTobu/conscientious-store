@@ -15,6 +15,10 @@ export const itemListSchema = listSchema.extend({
   inStockOnly: z.boolean().optional().default(true),
 })
 
+export const itemGroupByProductCodeSchema = listSchema.extend({
+  inStockOnly: z.boolean().optional().default(true),
+})
+
 export const itemForBuySchema = z.object({
   productCode: productSchema.shape.code,
   countInCart: z.number().int().min(0),
@@ -31,3 +35,5 @@ export const itemAddSchema = itemSchema.omit({
 export const itemAddManySchema = itemAddSchema.extend({
   purchaseQuantity: positiveIntegerSchema,
 }).array()
+
+export const itemCheckoutSchema = itemByIdSchema.array()
