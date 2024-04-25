@@ -5,9 +5,28 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ArchiveIcon, BackpackIcon, LightningBoltIcon, RocketIcon, StackIcon } from "@radix-ui/react-icons"
-import { ShareholderList } from "./components/shareholder-list"
 import { prisma } from "@/lib/prisma"
-import { SquareImage } from "@/components/square-image"
+import { ProductImage } from "@/app/product/components/product-image"
+import { ReactNode } from "react"
+import { PageTitle } from "@/components/page-title"
+
+const AmountCard = (props: {
+  className?: string | undefined,
+  title: string,
+  Icon: (props: { className: string }) => ReactNode,
+  amount: number,
+  large?: boolean | undefined,
+}) => (
+  <Card className={props.className}>
+    <CardHeader className="flex flex-row items-center justify-between">
+      <CardTitle className={props.large ? " text-xl" : ''}>{props.title}</CardTitle>
+      <props.Icon className="h-4 w-4" />
+    </CardHeader>
+    <CardContent>
+      <div className={props.large === true ? "text-6xl" : 'text-2xl'}>{props.amount}円</div>
+    </CardContent>
+  </Card>
+)
 
 export default async () => {
   const products = await prisma.product.findMany({
@@ -71,77 +90,54 @@ export default async () => {
   const drawer = liabilities + profits
 
   return (
-    <div className="gap-4 grid grid-cols-6">
-      <div className="col-span-6 grid-cols-subgrid grid items-end">
-        <Card className="col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className=" text-xl">引き出しのお金</CardTitle>
-            <BackpackIcon className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-6xl">{drawer}円</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>仕入</CardTitle>
-            <ArchiveIcon className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{purchases}円</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>売上</CardTitle>
-            <LightningBoltIcon className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{sales}円</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>利益</CardTitle>
-            <StackIcon className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{profits}円</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>負債</CardTitle>
-            <RocketIcon className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{profits}円</div>
-          </CardContent>
-        </Card>
+    <div className="gap-4 grid grid-cols-12 h-fit">
+      <div className="col-span-6">
+        <PageTitle title="ダッシュボード"/>
       </div>
+      <AmountCard className="col-span-6" title="引き出しのお金" Icon={BackpackIcon} amount={drawer} large />
 
-      {accountTitlesByProduct.map(accountTitles => (
-        <div className="col-span-5 grid grid-cols-subgrid" key={accountTitles.product.code}>
-          <div className="col-span-2 flex">
-            <img className="w-32 h-32 object-contain" src={accountTitles.product.image} />
-            <div>{accountTitles.product.name}</div>
-          </div>
-          <div>{accountTitles.purchases}</div>
-          <div>{accountTitles.sales}</div>
-          <div>{accountTitles.profits}</div>
-        </div>
-      ))}
+      <AmountCard className="col-span-3" title="仕入" Icon={ArchiveIcon} amount={purchases} />
+      <AmountCard className="col-span-3" title="売上" Icon={LightningBoltIcon} amount={sales} />
+      <AmountCard className="col-span-3" title="利益" Icon={StackIcon} amount={profits} />
+      <AmountCard className="col-span-3" title="負債" Icon={RocketIcon} amount={liabilities} />
 
-      <div className="grid-cols-subgrid grid">
-        {liabilitiesByShareholder.map(liabilities => (
-          <div className="flex items-center justify-between" key={liabilities.shareholder.id}>
-            <div>{liabilities.shareholder.name}</div>
-            <div>{liabilities.liabilities}円</div>
-          </div>
-        ))}
-      </div>
+      <Card className="col-span-9">
+        <CardHeader>
+          <CardTitle>商品別の勘定項目</CardTitle>
+        </CardHeader>
+        <CardContent className="gap-2 grid grid-cols-8 items-center justify-items-center">
+          <div className="col-span-5"></div>
+          <div className="text-muted-foreground">仕入</div>
+          <div className="text-muted-foreground">売上</div>
+          <div className="text-muted-foreground">利益</div>
+
+          {accountTitlesByProduct.map(accountTitles => (
+            <div className="col-span-8 grid-cols-subgrid grid items-center justify-items-center" key={accountTitles.product.code}>
+              <div className="col-span-5 justify-self-stretch gap-2 flex items-center">
+                <ProductImage size="sm" src={accountTitles.product.image} />
+                <div className="flex-1">{accountTitles.product.name}</div>
+              </div>
+              <div>{accountTitles.purchases}円</div>
+              <div>{accountTitles.sales}円</div>
+              <div>{accountTitles.profits}円</div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card className="col-span-3 h-fit">
+        <CardHeader>
+          <CardTitle>株主たち</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {liabilitiesByShareholder.map(liabilities => (
+            <div className="flex items-center justify-between" key={liabilities.shareholder.id}>
+              <div className="text-xl">{liabilities.shareholder.name}</div>
+              <div>{liabilities.liabilities}円</div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -1,17 +1,24 @@
 'use client'
 
 import { useCallback, useRef, useState } from "react"
-import { useCodeReader } from "@/hooks/useCodeReader"
 import { Button } from "@/components/ui/button"
 import { trpc } from "@/lib/trpc/client"
 import { useRouter } from "next/navigation"
 import { ProductArea } from "./components/product-area"
 import { ItemForm, ItemProps, defaultItemProps } from "./components/item-form"
 import { ProductCodeDialog } from "../product/components/product-code-dialog"
+import { PageTitle } from "@/components/page-title"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default () => {
-  const router = useRouter()
-
   const [productCodeSet, setProductCodeSet] = useState(new Set<string>())
   const ref = useRef({
     itemPropsMap: new Map<string, ItemProps>()
@@ -35,16 +42,13 @@ export default () => {
     ref.current.itemPropsMap.set(productCode, itemProps)
   }
 
-  useCodeReader(productCode => {
-    console.log('code-reader:', productCode)
-    addProductCode(productCode)
-  })
-
   const utils = trpc.useUtils()
+  const [open, setOpen] = useState(false)
+  const router = useRouter()
   const { mutate } = trpc.item.addMany.useMutation({
     onSuccess: async () => {
       await utils.item.invalidate()
-      router.push('/')
+      setOpen(true)
     },
   })
 
@@ -55,21 +59,39 @@ export default () => {
     })))
   }
 
+  const handleCancel = () => {
+    setProductCodeSet(new Set())
+    setOpen(false)
+  }
+
+  const handleAction = () => {
+    router.push('/')
+  }
+
   return (
     <div>
-      <div>
-        仕入れ
-      </div>
-      <ProductCodeDialog onProductCodeSubmit={addProductCode} />
-      <div>
+      <PageTitle title="仕入れる" />
+      <div className="space-y-4">
+        <ProductCodeDialog onProductCodeSubmit={addProductCode} />
         {Array.from(productCodeSet).map(productCode => (
-          <div className="flex" key={productCode}>
+          <div className="gap-2 grid grid-cols-12 items-center" key={productCode}>
             <ProductArea productCode={productCode} onDelete={() => removeProductCode(productCode)} />
             <ItemForm onChange={itemProps => updateItemProps(productCode, itemProps)} />
           </div>
         ))}
+        <Button onClick={handleSubmit}>仕入れを確定する</Button>
       </div>
-      <Button onClick={handleSubmit}>仕入れを確定する</Button>
+      <AlertDialog open={open}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>商品在庫の登録が完了しました</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancel}>仕入れに戻る</AlertDialogCancel>
+            <AlertDialogAction onClick={handleAction}>ホームに戻る</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -3,7 +3,8 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc/client"
 import { ProductForm } from "./product-form";
-import { TRPCError } from "@/components/trpc-error";
+import { TRPCErrorComponent } from "@/components/trpc-error-component";
+import { ProductImage } from "@/app/product/components/product-image";
 
 export const ProductArea = (props: {
   productCode: string
@@ -15,7 +16,7 @@ export const ProductArea = (props: {
 
   if (error !== null) {
     return (
-      <TRPCError error={error} />
+      <TRPCErrorComponent error={error} />
     )
   }
 
@@ -38,9 +39,9 @@ export const ProductArea = (props: {
   }
 
   return (
-    <div>
-      <div>{product.name}</div>
-      <img src={product.image} />
-    </div>
+    <>
+      <ProductImage className="col-span-3" size="md" src={product.image} />
+      <div className="col-span-6">{product.name}</div>
+    </>
   )
 }

@@ -26,18 +26,18 @@ export const ItemForm = (props: {
 
   return (
     <Form {...form}>
-      <form className="gap-2 flex" onChange={() => props.onChange(form.getValues())}>
+      <form className="h-fit col-span-3 gap-y-2 grid-cols-subgrid grid" onChange={() => props.onChange(form.getValues())}>
         <FormField
           control={form.control}
           name="purchaseQuantity"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>仕入れ数量</FormLabel>
+            <FormItem className="space-y-0 col-span-3 grid-cols-subgrid grid items-center">
+              <FormLabel className="text-end">仕入れ数量</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
+              <FormLabel></FormLabel>
+              <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
         />
@@ -45,13 +45,13 @@ export const ItemForm = (props: {
           control={form.control}
           name="purchasePrice"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>仕入れ値</FormLabel>
+            <FormItem className="space-y-0 col-span-3 grid-cols-subgrid grid items-center">
+              <FormLabel className="text-end">仕入れ値</FormLabel>
               <FormControl>
                 <Input {...field} />
-              </FormControl>円
-              <FormDescription></FormDescription>
-              <FormMessage />
+              </FormControl>
+              <FormLabel>円</FormLabel>
+              <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
         />
@@ -59,13 +59,13 @@ export const ItemForm = (props: {
           control={form.control}
           name="salePrice"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>売り値</FormLabel>
+            <FormItem className="space-y-0 col-span-3 grid-cols-subgrid grid items-center">
+              <FormLabel className="text-end">売り値</FormLabel>
               <FormControl>
                 <Input {...field} />
-              </FormControl>円
-              <FormDescription></FormDescription>
-              <FormMessage />
+              </FormControl>
+              <FormLabel>円</FormLabel>
+              <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
         />

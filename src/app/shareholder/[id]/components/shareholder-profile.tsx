@@ -1,6 +1,6 @@
 'use client'
 
-import { TRPCError } from "@/components/trpc-error";
+import { TRPCErrorComponent } from "@/components/trpc-error-component";
 import { trpc } from "@/lib/trpc/client"
 
 export const ShareholderProfile = (props: {
@@ -12,7 +12,7 @@ export const ShareholderProfile = (props: {
 
   if (error !== null) {
     return (
-      <TRPCError error={error} />
+      <TRPCErrorComponent error={error} />
     )
   }
 
@@ -21,7 +21,7 @@ export const ShareholderProfile = (props: {
   }
 
   return (
-    <div>
+    <div className="text-8xl">
       {shareholder.name}
     </div>
   )

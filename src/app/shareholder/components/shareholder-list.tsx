@@ -1,6 +1,7 @@
 'use client'
 
-import { TRPCError } from "@/components/trpc-error";
+import { TRPCErrorComponent } from "@/components/trpc-error-component";
+import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc/client"
 import Link from "next/link";
 
@@ -9,7 +10,7 @@ export const ShareholderList = () => {
 
   if (error !== null) {
     return (
-      <TRPCError error={error} />
+      <TRPCErrorComponent error={error} />
     )
   }
 
@@ -20,7 +21,9 @@ export const ShareholderList = () => {
   return (
     <>
       {data.shareholders.map(shareholder => (
-        <Link href={`shareholder/${shareholder.id}`} key={shareholder.id}>{shareholder.name}</Link>
+        <Button className="text-xl" variant="link" asChild key={shareholder.id}>
+          <Link href={`shareholder/${shareholder.id}`}>{shareholder.name}</Link>
+        </Button>
       ))}
     </>
   )

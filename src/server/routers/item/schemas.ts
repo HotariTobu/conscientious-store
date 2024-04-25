@@ -34,6 +34,6 @@ export const itemAddSchema = itemSchema.omit({
 
 export const itemAddManySchema = itemAddSchema.extend({
   purchaseQuantity: positiveIntegerSchema,
-}).array()
+}).array().min(1)
 
-export const itemCheckoutSchema = itemByIdSchema.array()
+export const itemCheckoutSchema = itemByIdSchema.array().min(1)

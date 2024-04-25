@@ -10,6 +10,7 @@ import { useZodForm } from "@/hooks/useZodForm";
 
 export const ShareCreateForm = (props: {
   shareholderId: string,
+  onCreate?: (() => void) | undefined
 }) => {
   const form = useZodForm({
     schema: shareAddSchema,
@@ -25,12 +26,18 @@ export const ShareCreateForm = (props: {
     onSuccess: async () => {
       await utils.share.invalidate()
       form.reset()
+      props.onCreate?.call(null)
     }
   })
 
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={form.handleSubmit(values => mutate(values))}>
+        <div className="text-nowrap">
+          株価:
+          <span className="ms-1 text-xl">{constants.quote}</span>
+          円
+        </div>
         <FormField
           control={form.control}
           name="count"

@@ -7,7 +7,9 @@ import { trpc } from "@/lib/trpc/client";
 import { shareholderAddSchema } from "@/server/routers/shareholder/schemas";
 import { useZodForm } from "@/hooks/useZodForm";
 
-export const ShareholderCreateForm = () => {
+export const ShareholderCreateForm = (props: {
+  onCreate?: (() => void) | undefined
+}) => {
   const form = useZodForm({
     schema: shareholderAddSchema,
     defaultValues: {
@@ -20,6 +22,7 @@ export const ShareholderCreateForm = () => {
     onSuccess: async () => {
       await utils.shareholder.invalidate()
       form.reset()
+      props.onCreate?.call(null)
     }
   })
 
@@ -40,7 +43,7 @@ export const ShareholderCreateForm = () => {
             </FormItem>
           )}
         />
-        <SubmitButton>追加</SubmitButton>
+        <SubmitButton>登録</SubmitButton>
       </form>
     </Form>
   )

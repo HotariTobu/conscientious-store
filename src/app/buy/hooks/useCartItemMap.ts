@@ -3,7 +3,13 @@ import { useReducer } from "react"
 export const cartItemMapReducer = (state: Map<string, number>, action: {
   method: 'add-front-item' | 'remove-front-item' | 'add-cart-item' | 'remove-cart-item',
   productCode: string,
+} | {
+  method: 'clear',
 }) => {
+  if (action.method === 'clear') {
+    return new Map()
+  }
+
   switch (action.method) {
     case 'add-front-item':
       return new Map([
@@ -15,6 +21,7 @@ export const cartItemMapReducer = (state: Map<string, number>, action: {
         ...Array.from(state)
           .filter(([productCode]) => productCode !== action.productCode),
       ])
+
   }
 
   const countInCart = state.get(action.productCode) ?? 0
