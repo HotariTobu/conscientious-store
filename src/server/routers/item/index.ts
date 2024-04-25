@@ -1,33 +1,36 @@
 import { publicProcedure, router } from "../../trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
-import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemFirstByProductCodeSchema, itemForBuySchema, itemListSchema } from "./schemas";
+import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemForBuySchema, itemListSchema } from "./schemas";
 
 export const itemRouter = router({
   list: publicProcedure
     .input(itemListSchema)
     .query(async ({ input }) => {
-      const { productCode, inStockOnly, cursor, skip, limit } = input;
+      const { productCode, excludeDeleted, cursor, skip, limit } = input;
 
       const items = await prisma.item.findMany({
         where: {
           productCode,
-          ...(inStockOnly ? {
-            soldQuantity: {
-              lt: prisma.item.fields.purchaseQuantity,
-            }
-          } : {})
+          ...(excludeDeleted ? {
+            deletedAt: null,
+          } : {}),
         },
         ...(cursor === null ? {} : {
           cursor: {
             id: cursor
           }
         }),
+
         skip,
         take: limit + 1,
         include: {
           product: true,
-        }
+        },
+
+        orderBy: {
+          createdAt: 'asc'
+        },
       })
       const nextCursor = limit < items.length ? items.pop()?.id : null
 
@@ -53,11 +56,12 @@ export const itemRouter = router({
           },
           where: {
             productCode,
-            soldQuantity: {
-              lt: prisma.item.fields.purchaseQuantity,
-            },
+            deletedAt: null,
           },
           take: countInCart + 1,
+          orderBy: {
+            createdAt: 'asc'
+          },
         })
 
         return {
@@ -100,8 +104,12 @@ export const itemRouter = router({
   addMany: publicProcedure
     .input(itemAddManySchema)
     .mutation(async ({ input }) => {
+      const data = input.flatMap(({ purchaseQuantity, ...props }) =>
+        new Array<typeof props>(purchaseQuantity).fill(props)
+      )
+
       const item = await prisma.item.createMany({
-        data: input,
+        data,
       });
 
       return item;

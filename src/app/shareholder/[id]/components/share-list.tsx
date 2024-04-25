@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc/client"
 import { Cross1Icon } from "@radix-ui/react-icons"
 
 export const ShareList = (props: {
-  shareholderId: number
+  shareholderId: string,
 }) => {
   const { error, isLoading, data } = trpc.share.list.useQuery(props)
 

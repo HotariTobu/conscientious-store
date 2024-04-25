@@ -4,7 +4,7 @@ import { TRPCError } from "@/components/trpc-error";
 import { trpc } from "@/lib/trpc/client"
 
 export const ShareholderProfile = (props: {
-  shareholderId: number
+  shareholderId: string,
 }) => {
   const { error, isLoading, data: shareholder } = trpc.shareholder.byId.useQuery({
     id: props.shareholderId

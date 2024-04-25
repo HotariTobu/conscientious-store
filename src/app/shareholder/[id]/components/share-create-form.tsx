@@ -9,7 +9,7 @@ import constants from "@/constants.json"
 import { useZodForm } from "@/hooks/useZodForm";
 
 export const ShareCreateForm = (props: {
-  shareholderId: number
+  shareholderId: string,
 }) => {
   const form = useZodForm({
     schema: shareAddSchema,

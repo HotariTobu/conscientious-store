@@ -17,41 +17,47 @@ model Product {
   code  String @id
   name  String
   image String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
   items Item[]
 }
 
 model Item {
-  id               Int     @id @default(autoincrement())
-  purchasePrice    Int
-  salePrice        Int
-  purchaseQuantity Int
-  soldQuantity     Int     @default(0)
-  product          Product @relation(fields: [productCode], references: [code])
-  productCode      String
+  id            String @id @default(uuid())
+  purchasePrice Int
+  salePrice     Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  product     Product @relation(fields: [productCode], references: [code])
+  productCode String
 }
 
 model Shareholder {
-  id     Int     @id @default(autoincrement())
-  name   String
-  stocks Share[]
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  shares Share[]
 }
 
 model Share {
-  id            Int         @id @default(autoincrement())
-  quote         Int
-  count         Int
-  shareholder   Shareholder @relation(fields: [shareholderId], references: [id])
-  shareholderId Int
-}
-
-model Post {
   id    String @id @default(uuid())
-  title String
-  text  String
+  quote Int
+  count Int
 
-  // To return `Date`s intact through the API we use transformers
-  // https://trpc.io/docs/v11/data-transformers
-  // This is unique so it can be used for cursor-based pagination
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  shareholder   Shareholder @relation(fields: [shareholderId], references: [id])
+  shareholderId String
 }
