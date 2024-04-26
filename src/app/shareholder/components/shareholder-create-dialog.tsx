@@ -2,16 +2,16 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ShareholderCreateForm } from "./shareholder-create-form"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import { Button } from "@/components/ui/button"
 
-export const ShareholderCreateDialog = () => {
+export const ShareholderCreateDialog = (props: PropsWithChildren) => {
   const [open, setOpen] = useState(false)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="text-base" variant="link">
-          株主になる
+          {props.children}
         </Button>
       </DialogTrigger>
       <DialogContent>

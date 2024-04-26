@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma"
 import { ProductImage } from "@/app/product/components/product-image"
 import { ReactNode } from "react"
 import { PageTitle } from "@/components/page-title"
+import { getRandomItem } from "@/utils/getRandomItem"
 
 const AmountCard = (props: {
   className?: string | undefined,
@@ -92,7 +93,7 @@ export default async () => {
   return (
     <div className="gap-4 grid grid-cols-12 h-fit">
       <div className="col-span-6">
-        <PageTitle title="ダッシュボード"/>
+        <PageTitle title="ダッシュボード" />
       </div>
       <AmountCard className="col-span-6" title="引き出しのお金" Icon={BackpackIcon} amount={drawer} large />
 
@@ -127,7 +128,7 @@ export default async () => {
 
       <Card className="col-span-3 h-fit">
         <CardHeader>
-          <CardTitle>株主たち</CardTitle>
+          <CardTitle>{getRandomItem(shareholderCardTitles)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {liabilitiesByShareholder.map(liabilities => (
@@ -141,3 +142,15 @@ export default async () => {
     </div>
   )
 }
+
+const shareholderCardTitles = [
+  '株主',
+  '株主リスト',
+  '株主たち',
+  '株主のみんな',
+  '株主の皆',
+  '株主のみなさま',
+  '株主の皆様',
+  '株主の方々',
+  'Shareholders',
+]
