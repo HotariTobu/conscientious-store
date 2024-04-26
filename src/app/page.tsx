@@ -19,24 +19,26 @@ const CardLink = ({ children, ...props }: PropsWithChildren<LinkProps>) => {
   )
 }
 
-export default () => (
-  <div className="flex flex-col justify-between">
-    <div className="m-auto w-fit gap-8 grid sm:grid-cols-2">
-      <CardLink href="/buy">{getRandomItem(buyLabels)}</CardLink>
-      <CardLink href="/stock-up">{getRandomItem(stockUpLabels)}</CardLink>
-      <CardLink href="/stock">{getRandomItem(stockLabels)}</CardLink>
-      <CardLink href="/dashboard">ダッシュボード</CardLink>
-    </div>
-
-    <div className="space-y-4 flex flex-col items-center">
-      <div className="text-muted-foreground">SPONSORED BY</div>
-      <div className="min-h-9 flex">
-        <ShareholderList />
+export default function Page() {
+  return (
+    <div className="flex flex-col justify-between">
+      <div className="m-auto w-fit gap-8 grid sm:grid-cols-2">
+        <CardLink href="/buy">{getRandomItem(buyLabels)}</CardLink>
+        <CardLink href="/stock-up">{getRandomItem(stockUpLabels)}</CardLink>
+        <CardLink href="/stock">{getRandomItem(stockLabels)}</CardLink>
+        <CardLink href="/dashboard">ダッシュボード</CardLink>
       </div>
-      <ShareholderCreateDialog>{getRandomItem(shareholderDialogLabels)}</ShareholderCreateDialog>
+
+      <div className="space-y-4 flex flex-col items-center">
+        <div className="text-muted-foreground">SPONSORED BY</div>
+        <div className="min-h-9 flex">
+          <ShareholderList />
+        </div>
+        <ShareholderCreateDialog>{getRandomItem(shareholderDialogLabels)}</ShareholderCreateDialog>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const buyLabels = [
   'かう',

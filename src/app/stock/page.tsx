@@ -17,7 +17,7 @@ const getPrice = (items: Pick<Item, 'salePrice'>[]) => {
   }
 }
 
-export default () => {
+export default function Page() {
   const { error, isLoading, data } = trpc.product.listWithItems.useQuery({})
 
   if (error !== null) {

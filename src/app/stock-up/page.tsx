@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-export default () => {
+export default function Page() {
   const [productCodeSet, setProductCodeSet] = useState(new Set<string>())
   const ref = useRef({
     itemPropsMap: new Map<string, ItemProps>()

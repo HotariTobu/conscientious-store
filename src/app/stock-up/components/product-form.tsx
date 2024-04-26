@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { useZodForm } from "@/hooks/useZodForm"
 import { trpc } from "@/lib/trpc/client"
 import { productAddSchema } from "@/server/routers/product/schemas"
+import Image from "next/image"
 
 export const ProductForm = (props: {
   productCode: string
@@ -59,7 +60,7 @@ export const ProductForm = (props: {
             </FormItem>
           )}
         />
-        <img className="mx-auto max-h-[40vh]" src={form.getValues('image')} />
+        <Image className="mx-auto max-h-[40vh]" src={form.getValues('image')} alt="product-image" />
         <SubmitButton>登録する</SubmitButton>
       </form>
     </Form>

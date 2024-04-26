@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 type HistoryItem = {
   time: number
@@ -10,7 +10,7 @@ export const useCodeReader = (onRead: (code: string) => void, threshold = 100) =
     history: [] as HistoryItem[]
   })
 
-  const handleKeyPress = (event: KeyboardEvent) => {
+  const handleKeyPress = useCallback((event: KeyboardEvent) => {
     const { history } = ref.current
     if (event.code === 'Enter') {
       const text = history.filter(({ time }) => event.timeStamp - time < threshold).map(({ key }) => key).join('')
@@ -25,12 +25,12 @@ export const useCodeReader = (onRead: (code: string) => void, threshold = 100) =
         key: event.key,
       })
     }
-  }
+  }, [onRead, threshold])
 
   useEffect(() => {
     document.addEventListener("keypress", handleKeyPress)
     return () => {
       document.removeEventListener("keypress", handleKeyPress)
     }
-  }, [])
+  }, [handleKeyPress])
 }

@@ -29,7 +29,7 @@ const AmountCard = (props: {
   </Card>
 )
 
-export default async () => {
+export default async function Page() {
   const products = await prisma.product.findMany({
     include: {
       items: true,

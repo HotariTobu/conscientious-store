@@ -21,7 +21,7 @@ import {
 import { PageTitle } from "@/components/page-title"
 import { Separator } from "@/components/ui/separator"
 
-export default () => {
+export default function Page() {
   const [cartItemMap, updateCartItemMap] = useCartItemMap()
 
   const addFrontItem = useCallback((productCode: string) => {
