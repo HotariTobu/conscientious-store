@@ -6,6 +6,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { trpc } from "@/lib/trpc/client";
 import { shareholderAddSchema } from "@/server/routers/shareholder/schemas";
 import { useZodForm } from "@/hooks/useZodForm";
+import { toastTRPCError } from "@/utils/toastTRPCError";
 
 export const ShareholderCreateForm = (props: {
   onCreate?: (() => void) | undefined
@@ -23,7 +24,10 @@ export const ShareholderCreateForm = (props: {
       await utils.shareholder.invalidate()
       form.reset()
       props.onCreate?.call(null)
-    }
+    },
+    onError: (error) => {
+      toastTRPCError(error)
+    },
   })
 
   return (

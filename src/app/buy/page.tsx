@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { PageTitle } from "@/components/page-title"
 import { Separator } from "@/components/ui/separator"
+import { toastTRPCError } from "@/utils/toastTRPCError"
 
 export default function Page() {
   const [cartItemMap, updateCartItemMap] = useCartItemMap()
@@ -36,7 +37,10 @@ export default function Page() {
   const { mutate } = trpc.item.checkout.useMutation({
     onSuccess: () => {
       setOpen(true)
-    }
+    },
+    onError: (error) => {
+      toastTRPCError(error)
+    },
   })
 
   const { error, isLoading, data } = trpc.item.forBuy.useQuery(

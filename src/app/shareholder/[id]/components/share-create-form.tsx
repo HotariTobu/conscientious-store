@@ -7,6 +7,7 @@ import { trpc } from "@/lib/trpc/client";
 import { shareAddSchema } from "@/server/routers/share/schemas";
 import constants from "@/constants.json"
 import { useZodForm } from "@/hooks/useZodForm";
+import { toastTRPCError } from "@/utils/toastTRPCError";
 
 export const ShareCreateForm = (props: {
   shareholderId: string,
@@ -27,7 +28,10 @@ export const ShareCreateForm = (props: {
       await utils.share.invalidate()
       form.reset()
       props.onCreate?.call(null)
-    }
+    },
+    onError: (error) => {
+      toastTRPCError(error)
+    },
   })
 
   return (

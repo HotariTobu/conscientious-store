@@ -17,6 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
+import { toastTRPCError } from "@/utils/toastTRPCError"
 
 export default function Page() {
   const [productCodeSet, setProductCodeSet] = useState(new Set<string>())
@@ -49,6 +51,9 @@ export default function Page() {
     onSuccess: async () => {
       await utils.item.invalidate()
       setOpen(true)
+    },
+    onError: (error) => {
+      toastTRPCError(error)
     },
   })
 

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { useZodForm } from "@/hooks/useZodForm"
 import { trpc } from "@/lib/trpc/client"
 import { productAddSchema } from "@/server/routers/product/schemas"
+import { toastTRPCError } from "@/utils/toastTRPCError"
 
 export const ProductForm = (props: {
   productCode: string
@@ -23,7 +24,10 @@ export const ProductForm = (props: {
   const { mutate } = trpc.product.add.useMutation({
     onSuccess: async () => {
       await utils.product.invalidate()
-    }
+    },
+    onError: (error) => {
+      toastTRPCError(error)
+    },
   })
 
   return (
