@@ -29,9 +29,7 @@ export const ShareCreateForm = (props: {
       form.reset()
       props.onCreate?.call(null)
     },
-    onError: (error) => {
-      toastTRPCError(error)
-    },
+    onError: toastTRPCError,
   })
 
   return (

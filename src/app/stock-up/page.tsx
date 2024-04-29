@@ -52,9 +52,7 @@ export default function Page() {
       await utils.item.invalidate()
       setOpen(true)
     },
-    onError: (error) => {
-      toastTRPCError(error)
-    },
+    onError: toastTRPCError,
   })
 
   const handleSubmit = () => {

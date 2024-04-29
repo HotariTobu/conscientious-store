@@ -1,7 +1,7 @@
 import { publicProcedure, router } from "@/server/trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
-import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemCheckoutSchema, itemForBuySchema, itemGroupByProductCodeSchema, itemListSchema } from "./schemas";
+import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemCheckoutSchema, itemForBuySchema, itemGroupByProductCodeSchema, itemListSchema, itemUpdatePriceSchema } from "./schemas";
 
 export const itemRouter = router({
   list: publicProcedure
@@ -191,4 +191,19 @@ export const itemRouter = router({
 
       await Promise.all(promises)
     }),
+  updatePrice: publicProcedure
+    .input(itemUpdatePriceSchema)
+    .mutation(async ({ input }) => {
+      const { salePrice, productCode } = input
+
+      const batchResult = await prisma.item.updateMany({
+        where: {
+          productCode,
+          deletedAt: null,
+        },
+        data: { salePrice },
+      })
+
+      return batchResult
+    })
 });

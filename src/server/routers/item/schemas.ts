@@ -37,3 +37,8 @@ export const itemAddManySchema = itemAddSchema.extend({
 }).array().min(1)
 
 export const itemCheckoutSchema = itemByIdSchema.array().min(1)
+
+export const itemUpdatePriceSchema = itemSchema.pick({
+  salePrice: true,
+  productCode: true,
+})

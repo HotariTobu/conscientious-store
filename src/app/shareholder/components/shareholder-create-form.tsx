@@ -25,9 +25,7 @@ export const ShareholderCreateForm = (props: {
       form.reset()
       props.onCreate?.call(null)
     },
-    onError: (error) => {
-      toastTRPCError(error)
-    },
+    onError: toastTRPCError,
   })
 
   return (

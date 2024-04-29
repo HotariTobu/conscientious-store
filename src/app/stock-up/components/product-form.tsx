@@ -25,9 +25,7 @@ export const ProductForm = (props: {
     onSuccess: async () => {
       await utils.product.invalidate()
     },
-    onError: (error) => {
-      toastTRPCError(error)
-    },
+    onError: toastTRPCError,
   })
 
   return (

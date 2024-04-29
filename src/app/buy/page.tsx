@@ -38,9 +38,7 @@ export default function Page() {
     onSuccess: () => {
       setOpen(true)
     },
-    onError: (error) => {
-      toastTRPCError(error)
-    },
+    onError: toastTRPCError,
   })
 
   const { error, isLoading, data } = trpc.item.forBuy.useQuery(
