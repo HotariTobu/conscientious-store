@@ -53,10 +53,14 @@ export default function Page() {
   })
 
   const handleSubmit = () => {
-    mutate(Array.from(productCodeSet).map(productCode => ({
-      productCode,
-      ...(ref.current.itemPropsMap.get(productCode) ?? defaultItemProps)
-    })))
+    mutate(Array.from(productCodeSet).map(productCode => {
+      const itemProps = ref.current.itemPropsMap.get(productCode) ?? defaultItemProps
+      return {
+        productCode,
+        ...itemProps,
+        purchasePrice: itemProps.purchasePrice * 1.08,
+      }
+    }))
   }
 
   const handleCancel = () => {
@@ -73,6 +77,7 @@ export default function Page() {
       <PageTitle title="仕入れる" />
       <div className="space-y-4">
         <ProductCodeDialog onProductCodeSubmit={addProductCode} />
+        <div className="text-sm">カッコ内の数値は8%消費税込みの価格</div>
         {Array.from(productCodeSet).map(productCode => (
           <div className="gap-2 grid grid-cols-12 items-center" key={productCode}>
             <ProductArea productCode={productCode} onDelete={() => removeProductCode(productCode)} />

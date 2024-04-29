@@ -50,7 +50,7 @@ export const ItemForm = (props: {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormLabel>円</FormLabel>
+              <FormLabel>({form.getValues('purchasePrice') * 1.08})円</FormLabel>
               <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
