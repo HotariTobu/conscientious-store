@@ -63,7 +63,7 @@ export default function Page() {
       return {
         productCode,
         ...itemProps,
-        purchasePrice: itemProps.purchasePrice * 1.08,
+        purchasePrice: Math.round(itemProps.purchasePrice * 1.08),
       }
     }))
   }

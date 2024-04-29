@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { router, publicProcedure } from '../../trpc';
+import { publicProcedure, router } from "@/server/trpc";
 import { TRPCError } from '@trpc/server';
 import { shareAddSchema, shareByIdSchema, shareListSchema } from './schemas';
 

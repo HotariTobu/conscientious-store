@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Card,
   CardContent,
@@ -5,11 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ArchiveIcon, BackpackIcon, LightningBoltIcon, RocketIcon, StackIcon } from "@radix-ui/react-icons"
-import { prisma } from "@/lib/prisma"
 import { ProductImage } from "@/app/product/components/product-image"
 import { ReactNode } from "react"
 import { PageTitle } from "@/components/page-title"
 import { getRandomItem } from "@/utils/getRandomItem"
+import { trpc } from "@/lib/trpc/client"
+import { TRPCErrorComponent } from "@/components/trpc-error-component"
 
 const AmountCard = (props: {
   className?: string | undefined,
@@ -29,78 +32,30 @@ const AmountCard = (props: {
   </Card>
 )
 
-export default async function Page() {
-  const products = await prisma.product.findMany({
-    include: {
-      items: true,
-    }
-  })
+export default function Page() {
+  const { error, isLoading, data } = trpc.dashboard.overview.useQuery()
 
-  const shareholders = await prisma.shareholder.findMany({
-    include: {
-      shares: true,
-    }
-  })
+  if (error !== null) {
+    return (
+      <TRPCErrorComponent error={error} />
+    )
+  }
 
-  const accountTitlesByProduct = products
-    .map(product => {
-      const purchases = product.items
-        .reduce((subtotal, { purchasePrice }) => (
-          subtotal + purchasePrice
-        ), 0)
-      const sales = product.items
-        .filter(({ deletedAt }) => deletedAt !== null)
-        .reduce((subtotal, { salePrice }) => (
-          subtotal + salePrice
-        ), 0)
-      const profits = sales - purchases
-      return {
-        product,
-        purchases,
-        sales,
-        profits,
-      }
-    })
-
-  const purchases = accountTitlesByProduct
-    .reduce((total, { purchases }) => (
-      total + purchases
-    ), 0)
-
-  const sales = accountTitlesByProduct
-    .reduce((total, { sales }) => (
-      total + sales
-    ), 0)
-
-  const profits = sales - purchases
-
-  const liabilitiesByShareholder = shareholders
-    .map(shareholder => ({
-      shareholder,
-      liabilities: shareholder.shares
-        .reduce((subtotal, { quote, count }) => (
-          subtotal + quote * count
-        ), 0)
-    }))
-
-  const liabilities = liabilitiesByShareholder
-    .reduce((total, { liabilities }) => (
-      total + liabilities
-    ), 0)
-
-  const drawer = liabilities + profits
+  if (isLoading) {
+    return
+  }
 
   return (
     <div className="gap-4 grid grid-cols-12 h-fit">
       <div className="col-span-6">
         <PageTitle title="ダッシュボード" />
       </div>
-      <AmountCard className="col-span-6" title="引き出しのお金" Icon={BackpackIcon} amount={drawer} large />
+      <AmountCard className="col-span-6" title="引き出しのお金" Icon={BackpackIcon} amount={data.drawer} large />
 
-      <AmountCard className="col-span-3" title="仕入" Icon={ArchiveIcon} amount={purchases} />
-      <AmountCard className="col-span-3" title="売上" Icon={LightningBoltIcon} amount={sales} />
-      <AmountCard className="col-span-3" title="利益" Icon={StackIcon} amount={profits} />
-      <AmountCard className="col-span-3" title="負債" Icon={RocketIcon} amount={liabilities} />
+      <AmountCard className="col-span-3" title="仕入" Icon={ArchiveIcon} amount={data.purchases} />
+      <AmountCard className="col-span-3" title="売上" Icon={LightningBoltIcon} amount={data.sales} />
+      <AmountCard className="col-span-3" title="利益" Icon={StackIcon} amount={data.profits} />
+      <AmountCard className="col-span-3" title="負債" Icon={RocketIcon} amount={data.liabilities} />
 
       <Card className="col-span-9">
         <CardHeader>
@@ -112,7 +67,7 @@ export default async function Page() {
           <div className="text-muted-foreground">売上</div>
           <div className="text-muted-foreground">利益</div>
 
-          {accountTitlesByProduct.map(accountTitles => (
+          {data.accountTitlesByProduct.map(accountTitles => (
             <div className="col-span-8 grid-cols-subgrid grid items-center justify-items-center" key={accountTitles.product.code}>
               <div className="col-span-5 justify-self-stretch gap-2 flex items-center">
                 <ProductImage size="sm" src={accountTitles.product.image} />
@@ -131,7 +86,7 @@ export default async function Page() {
           <CardTitle>{getRandomItem(shareholderCardTitles)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {liabilitiesByShareholder.map(liabilities => (
+          {data.liabilitiesByShareholder.map(liabilities => (
             <div className="flex items-center justify-between" key={liabilities.shareholder.id}>
               <div className="text-xl">{liabilities.shareholder.name}</div>
               <div>{liabilities.liabilities}円</div>

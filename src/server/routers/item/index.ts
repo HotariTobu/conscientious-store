@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, router } from "@/server/trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
 import { itemAddManySchema, itemAddSchema, itemByIdSchema, itemCheckoutSchema, itemForBuySchema, itemGroupByProductCodeSchema, itemListSchema } from "./schemas";

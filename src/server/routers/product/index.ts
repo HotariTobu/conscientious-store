@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, router } from "@/server/trpc";
 import { prisma } from "@/lib/prisma";
 import { TRPCError } from "@trpc/server";
 import { productAddSchema, productByCodeSchema, productListWithItemsSchema, productUpdateSchema } from "./schemas";
@@ -14,6 +14,13 @@ export const productRouter = router({
           ...(excludeDeleted ? {
             deletedAt: null,
           } : {}),
+          items: {
+            some: {
+              ...(excludeDeleted ? {
+                deletedAt: null,
+              } : {}),
+            },
+          },
         },
         ...(cursor === null ? {} : {
           cursor: {
