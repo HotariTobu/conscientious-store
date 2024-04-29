@@ -1,3 +1,4 @@
+import { ProductImage } from "@/app/product/components/product-image"
 import { SubmitButton } from "@/components/submit-button"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -5,7 +6,6 @@ import { Input } from "@/components/ui/input"
 import { useZodForm } from "@/hooks/useZodForm"
 import { trpc } from "@/lib/trpc/client"
 import { productAddSchema } from "@/server/routers/product/schemas"
-import Image from "next/image"
 
 export const ProductForm = (props: {
   productCode: string
@@ -60,7 +60,7 @@ export const ProductForm = (props: {
             </FormItem>
           )}
         />
-        <Image className="mx-auto max-h-[40vh]" src={form.getValues('image')} alt="product-image" />
+        <ProductImage size="lg" src={form.getValues('image')} />
         <SubmitButton>登録する</SubmitButton>
       </form>
     </Form>

@@ -37,9 +37,9 @@ export default function Page() {
         {data.products.map(product => {
           const price = getPrice(product.items)
           return (
-            <div className="space-y-2 grow" key={product.code}>
+            <div className="space-y-2 max-w-96 grow" key={product.code}>
               <ProductImage size="lg" src={product.image} />
-              <div className="w-96 text-center">
+              <div className="text-center">
                 <div className="truncate">{product.name}</div>
                 <div className="text-nowrap">
                   数量:
