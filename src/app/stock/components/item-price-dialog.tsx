@@ -24,21 +24,21 @@ export const ItemPriceDialog = (props: {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="link">
+        <div>
           {minPrice === maxPrice ? (
-            <div>
+            <>
               価格:
-              <span className="ms-1 text-xl">{minPrice}</span>
+              <Button className="ms-1 text-xl p-0" variant="link">{minPrice}</Button>
               円
-            </div>
+            </>
           ) : (
-            <div>
+            <>
               価格帯:
-              <span className="ms-1 text-xl">{minPrice}～{maxPrice}</span>
+              <Button className="ms-1 text-xl p-0" variant="link">{minPrice}～{maxPrice}</Button>
               円
-            </div>
+            </>
           )}
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

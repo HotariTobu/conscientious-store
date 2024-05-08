@@ -35,11 +35,12 @@ export const ItemPriceForm = (props: {
           control={form.control}
           name="salePrice"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-0 gap-2 flex items-center">
               <FormLabel>売り値</FormLabel>
-              <FormControl>
+              <FormControl className="w-32">
                 <Input {...field} />
               </FormControl>
+              <FormLabel>円</FormLabel>
               <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
