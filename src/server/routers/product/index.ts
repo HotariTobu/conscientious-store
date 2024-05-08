@@ -40,9 +40,14 @@ export const productRouter = router({
         skip,
         take: limit + 1,
 
-        orderBy: {
-          createdAt: 'asc'
-        },
+        orderBy: [
+          {
+            name: 'asc'
+          },
+          {
+            createdAt: 'asc'
+          },
+        ],
       })
       const nextCursor = limit < products.length ? products.pop()?.code : null
 

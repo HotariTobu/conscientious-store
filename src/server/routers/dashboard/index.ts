@@ -7,7 +7,10 @@ export const dashboardRouter = router({
       const products = await prisma.product.findMany({
         include: {
           items: true,
-        }
+        },
+        orderBy: {
+          name: 'asc'
+        },
       })
 
       const shareholders = await prisma.shareholder.findMany({
