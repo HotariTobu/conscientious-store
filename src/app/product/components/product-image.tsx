@@ -21,6 +21,6 @@ export const ProductImage = ({ className, size, ...props }: {
         ''
 
   return (
-    <Image className={cn('m-auto object-contain flex-none', sizeClass, className)} alt="product-image" width={512} height={512} unoptimized {...props} />
+    <Image className={cn('m-auto object-contain flex-none', sizeClass, className)} alt="product-image" priority={false} width={512} height={512} unoptimized {...props} />
   )
 }
