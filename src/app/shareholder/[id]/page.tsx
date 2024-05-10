@@ -16,7 +16,7 @@ export default page({
     <div className="space-y-4">
       <ShareholderProfile shareholderId={id} />
       <ShareCreateDialog shareholderId={id} />
-      <Card className="w-96">
+      <Card className="w-fit">
         <CardHeader>
           <CardTitle>保有株</CardTitle>
         </CardHeader>

@@ -21,3 +21,8 @@ export const shareByIdSchema = shareSchema.pick({
 export const shareAddSchema = shareSchema.omit({
   id: true
 })
+
+export const shareRemoveSchema = shareSchema.pick({
+  id: true,
+  count: true,
+})

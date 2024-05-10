@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { publicProcedure, router } from "@/server/trpc";
 import { TRPCError } from '@trpc/server';
-import { shareAddSchema, shareByIdSchema, shareListSchema } from './schemas';
+import { shareAddSchema, shareByIdSchema, shareListSchema, shareRemoveSchema } from './schemas';
 
 export const shareRouter = router({
   list: publicProcedure
@@ -58,6 +58,28 @@ export const shareRouter = router({
       const share = await prisma.share.create({
         data: input,
       });
+
+      return share;
+    }),
+  remove: publicProcedure
+    .input(shareRemoveSchema)
+    .mutation(async ({ input }) => {
+      const { id, count } = input
+
+      const share = await prisma.share.update({
+        where: { id },
+        data: {
+          count: {
+            decrement: count,
+          }
+        },
+      });
+
+      if (share.count <= 0) {
+        await prisma.share.delete({
+          where: { id },
+        })
+      }
 
       return share;
     }),
