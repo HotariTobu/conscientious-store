@@ -1,5 +1,6 @@
 import { getRandomItem } from "@/utils/getRandomItem"
 import { playAudio } from "@/utils/playAudio"
+import { useCallback } from "react"
 
 export const useSoundEffect = <A extends (...params: never[]) => unknown = () => void>(sources: string[], action?: A | undefined) => {
   console.assert(sources.length > 0, 'At least one sound effect source was needed.')
@@ -7,7 +8,7 @@ export const useSoundEffect = <A extends (...params: never[]) => unknown = () =>
   type CP = A extends ((...params: infer P) => unknown) ? P : []
   type CR = A extends ((...params: never[]) => infer R) ? R : void
 
-  return (...params: CP) => {
+  return useCallback((...params: CP) => {
     const source = getRandomItem(sources)
     playAudio(source)
 
@@ -17,5 +18,5 @@ export const useSoundEffect = <A extends (...params: never[]) => unknown = () =>
     else {
       return action(...params) as CR
     }
-  }
+  }, [sources, action])
 }
