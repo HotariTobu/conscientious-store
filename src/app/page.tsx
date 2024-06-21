@@ -4,6 +4,7 @@ import Link, { LinkProps } from "next/link";
 import { PropsWithChildren } from "react";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { getRandomItem } from "@/utils/getRandomItem";
+import { SoundEffect } from "@/components/sound-effect";
 
 const CardLink = ({ children, ...props }: PropsWithChildren<LinkProps>) => {
   return (
@@ -19,7 +20,7 @@ const CardLink = ({ children, ...props }: PropsWithChildren<LinkProps>) => {
   )
 }
 
-export default function Page() {
+const PageContent = () => {
   return (
     <div className="flex flex-col justify-between">
       <div className="m-auto w-fit gap-8 grid sm:grid-cols-2">
@@ -38,6 +39,13 @@ export default function Page() {
       </div>
     </div>
   )
+}
+
+export default function Page() {
+  return <>
+    <PageContent />
+    <SoundEffect sources={indexSESources} />
+  </>
 }
 
 const buyLabels = [
@@ -281,4 +289,14 @@ const shareholderDialogLabels = [
   '株主王におれはなる',
   '株主王におれはなる！',
   '株主王におれはなる？',
+]
+
+const indexSESources = [
+  "https://soundeffect-lab.info/sound/anime/mp3/title1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/news-title1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/news-title2.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/news-title3.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/news-title4.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/presentation-title1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/presentation-title2.mp3",
 ]

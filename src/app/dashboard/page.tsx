@@ -13,6 +13,7 @@ import { PageTitle } from "@/components/page-title"
 import { getRandomItem } from "@/utils/getRandomItem"
 import { trpc } from "@/lib/trpc/client"
 import { TRPCErrorComponent } from "@/components/trpc-error-component"
+import { SoundEffect } from "@/components/sound-effect"
 
 const AmountCard = (props: {
   className?: string | undefined,
@@ -32,7 +33,7 @@ const AmountCard = (props: {
   </Card>
 )
 
-export default function Page() {
+const PageContent = () => {
   const { error, isLoading, data } = trpc.dashboard.overview.useQuery()
 
   if (error !== null) {
@@ -98,6 +99,13 @@ export default function Page() {
   )
 }
 
+export default function Page() {
+  return <>
+    <PageContent />
+    <SoundEffect sources={dashboardSEsources} />
+  </>
+}
+
 const shareholderCardTitles = [
   '株主',
   '株主リスト',
@@ -108,4 +116,11 @@ const shareholderCardTitles = [
   '株主の皆様',
   '株主の方々',
   'Shareholders',
+]
+
+const dashboardSEsources = [
+  'https://soundeffect-lab.info/sound/button/mp3/data-display1.mp3',
+  'https://soundeffect-lab.info/sound/button/mp3/data-display2.mp3',
+  'https://soundeffect-lab.info/sound/button/mp3/data-display3.mp3',
+  'https://soundeffect-lab.info/sound/button/mp3/data-display4.mp3',
 ]

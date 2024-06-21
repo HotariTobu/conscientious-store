@@ -21,8 +21,11 @@ import {
 import { PageTitle } from "@/components/page-title"
 import { Separator } from "@/components/ui/separator"
 import { toastTRPCError } from "@/utils/toastTRPCError"
+import { useSoundEffect } from "@/hooks/useSoundEffect"
+import constants from "@/constants.json"
+import { SoundEffect } from "@/components/sound-effect"
 
-export default function Page() {
+const PageContent = () => {
   const [cartItemMap, updateCartItemMap] = useCartItemMap()
 
   const addFrontItem = useCallback((productCode: string) => {
@@ -33,10 +36,11 @@ export default function Page() {
   }, [updateCartItemMap])
 
   const [open, setOpen] = useState(false)
+  const openDialog = useSoundEffect(checkoutSESources, () => setOpen(true))
   const router = useRouter()
   const { mutate } = trpc.item.checkout.useMutation({
     onSuccess: () => {
-      setOpen(true)
+      openDialog()
     },
     onError: toastTRPCError,
   })
@@ -49,6 +53,16 @@ export default function Page() {
       })
     )
   )
+
+  const addCart = useSoundEffect(constants.audio.money, (productCode: string) => updateCartItemMap({
+    method: 'add-cart-item',
+    productCode,
+  }))
+
+  const removeCart = useSoundEffect(removeCartSESources, (productCode: string) => updateCartItemMap({
+    method: 'remove-cart-item',
+    productCode,
+  }))
 
   if (error !== null) {
     return (
@@ -86,10 +100,7 @@ export default function Page() {
             <Separator className="mx-auto w-4/5" orientation="horizontal" />
             {data.itemInFrontList.map(itemInFront => itemInFront === null || (
               <ItemRow {...itemInFront} key={itemInFront.id} >
-                <Button onClick={() => updateCartItemMap({
-                  method: 'add-cart-item',
-                  productCode: itemInFront.product.code,
-                })}>
+                <Button onClick={() => addCart(itemInFront.product.code)}>
                   カートに入れる
                   <ArrowRightIcon className="ms-2 w-4 h-4" />
                 </Button>
@@ -103,10 +114,7 @@ export default function Page() {
               .flatMap(itemsInCart => itemsInCart)
               .map(itemInCart => (
                 <ItemRow {...itemInCart} key={itemInCart.id} >
-                  <Button onClick={() => updateCartItemMap({
-                    method: 'remove-cart-item',
-                    productCode: itemInCart.product.code,
-                  })}>
+                  <Button onClick={() => removeCart(itemInCart.product.code)}>
                     <ArrowLeftIcon className="ms-2 w-4 h-4" />
                     カートから出す
                   </Button>
@@ -137,3 +145,37 @@ export default function Page() {
     </div>
   )
 }
+
+export default function Page() {
+  return <>
+    <PageContent />
+    <SoundEffect sources={buySESources} />
+  </>
+}
+
+const buySESources = [
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-irasshaimase1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-irasshai1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-rasshai1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-irasshaidesu1.mp3",
+]
+
+const checkoutSESources = [
+  "https://soundeffect-lab.info/sound/voice/mp3/info-girl1/info-girl1-goriyouarigatou1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/info-girl1/info-girl1-goriyouarigatou2.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/info-girl1/info-girl1-matanogoriyouwo1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-arigatougozaimasu1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-maidoari1.mp3",
+  "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-maidoarigatougozaimasu1.mp3",
+]
+
+const removeCartSESources = [
+  "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/papa1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/peta1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/pafu1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/pico-pico-hammer1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/nyu1.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/nyu2.mp3",
+  "https://soundeffect-lab.info/sound/anime/mp3/nyu3.mp3",
+]

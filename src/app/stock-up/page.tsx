@@ -17,10 +17,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { toast } from "sonner"
 import { toastTRPCError } from "@/utils/toastTRPCError"
+import { SoundEffect } from "@/components/sound-effect"
+import constants from "@/constants.json"
+import { useSoundEffect } from "@/hooks/useSoundEffect"
 
-export default function Page() {
+const PageContent = () => {
   const [productCodeSet, setProductCodeSet] = useState(new Set<string>())
   const ref = useRef({
     itemPropsMap: new Map<string, ItemProps>()
@@ -46,11 +48,12 @@ export default function Page() {
 
   const utils = trpc.useUtils()
   const [open, setOpen] = useState(false)
+  const openDialog = useSoundEffect(constants.audio.ok, () => setOpen(true))
   const router = useRouter()
   const { mutate } = trpc.item.addMany.useMutation({
     onSuccess: async () => {
       await utils.item.invalidate()
-      setOpen(true)
+      openDialog()
     },
     onError: toastTRPCError,
   })
@@ -102,4 +105,11 @@ export default function Page() {
       </AlertDialog>
     </div>
   )
+}
+
+export default function Page() {
+  return <>
+    <PageContent />
+    <SoundEffect sources={constants.audio.open} />
+  </>
 }

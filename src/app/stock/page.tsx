@@ -5,8 +5,10 @@ import { ProductImage } from "@/app/product/components/product-image"
 import { TRPCErrorComponent } from "@/components/trpc-error-component"
 import { trpc } from "@/lib/trpc/client"
 import { ItemPriceDialog } from "./components/item-price-dialog"
+import { SoundEffect } from "@/components/sound-effect"
+import constants from "@/constants.json"
 
-export default function Page() {
+const PageContent = () => {
   const { error, isLoading, data } = trpc.product.listWithItems.useQuery({})
 
   if (error !== null) {
@@ -39,4 +41,11 @@ export default function Page() {
       </div>
     </div>
   )
+}
+
+export default function Page() {
+  return <>
+    <PageContent />
+    <SoundEffect sources={constants.audio.open} />
+  </>
 }
