@@ -4,6 +4,8 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { itemAddManySchema } from "@/server/routers/item/schemas"
 import { z } from "zod"
 
+const taxRate = 1.08
+
 const itemPropsSchema = itemAddManySchema.element.omit({
   productCode: true
 })
@@ -50,7 +52,7 @@ export const ItemForm = (props: {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormLabel>({(form.getValues('purchasePrice') * 1.08).toFixed(1)})円</FormLabel>
+              <FormLabel>({(form.getValues('purchasePrice') * taxRate).toFixed(1)})円</FormLabel>
               <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
