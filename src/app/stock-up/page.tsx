@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { trpc } from "@/lib/trpc/client"
 import { useRouter } from "next/navigation"
 import { ProductArea } from "./components/product-area"
-import { ItemForm, ItemProps, defaultItemProps } from "./components/item-form"
+import { ItemForm, ItemProps, defaultItemProps, taxRate } from "./components/item-form"
 import { ProductCodeDialog } from "../product/components/product-code-dialog"
 import { PageTitle } from "@/components/page-title"
 import {
@@ -61,10 +61,12 @@ const PageContent = () => {
   const handleSubmit = () => {
     mutate(Array.from(productCodeSet).map(productCode => {
       const itemProps = ref.current.itemPropsMap.get(productCode) ?? defaultItemProps
+      const { purchasePrice, salePrice, purchaseQuantity, usePurchasePriceIncludedTax } = itemProps
       return {
         productCode,
-        ...itemProps,
-        purchasePrice: Math.round(itemProps.purchasePrice * 1.08),
+        purchasePrice: usePurchasePriceIncludedTax ? Math.round(purchasePrice * taxRate) : purchasePrice,
+        purchaseQuantity,
+        salePrice,
       }
     }))
   }

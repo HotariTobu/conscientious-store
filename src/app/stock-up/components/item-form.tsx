@@ -1,13 +1,16 @@
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import { useZodForm } from "@/hooks/useZodForm"
 import { itemAddManySchema } from "@/server/routers/item/schemas"
 import { z } from "zod"
 
-const taxRate = 1.08
+export const taxRate = 1.08
 
 const itemPropsSchema = itemAddManySchema.element.omit({
-  productCode: true
+  productCode: true,
+}).extend({
+  usePurchasePriceIncludedTax: z.boolean(),
 })
 
 export type ItemProps = z.infer<typeof itemPropsSchema>
@@ -16,6 +19,7 @@ export const defaultItemProps: ItemProps = {
   purchasePrice: 0,
   salePrice: 0,
   purchaseQuantity: 1,
+  usePurchasePriceIncludedTax: true,
 }
 
 export const ItemForm = (props: {
@@ -67,6 +71,19 @@ export const ItemForm = (props: {
                 <Input {...field} />
               </FormControl>
               <FormLabel>円</FormLabel>
+              <FormMessage className="col-span-3 text-center" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="usePurchasePriceIncludedTax"
+          render={({ field }) => (
+            <FormItem className="space-y-0 col-span-3 grid-cols-subgrid grid items-center">
+              <FormLabel className="text-end col-span-2">税込の仕入れ値を使う</FormLabel>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
               <FormMessage className="col-span-3 text-center" />
             </FormItem>
           )}
