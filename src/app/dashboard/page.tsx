@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { ArchiveIcon, BackpackIcon, LightningBoltIcon, RocketIcon, StackIcon } from "@radix-ui/react-icons"
+import { ArchiveIcon, BackpackIcon, BarChartIcon, RocketIcon, StackIcon } from "@radix-ui/react-icons"
 import { ProductImage } from "@/app/product/components/product-image"
 import { ReactNode } from "react"
 import { PageTitle } from "@/components/page-title"
@@ -54,9 +54,14 @@ const PageContent = () => {
       <AmountCard className="col-span-6" title="引き出しのお金" Icon={BackpackIcon} amount={data.drawer} large />
 
       <AmountCard className="col-span-3" title="仕入" Icon={ArchiveIcon} amount={data.purchases} />
-      <AmountCard className="col-span-3" title="売上" Icon={LightningBoltIcon} amount={data.sales} />
+      <AmountCard className="col-span-3" title="売上" Icon={BarChartIcon} amount={data.sales} />
       <AmountCard className="col-span-3" title="利益" Icon={StackIcon} amount={data.profits} />
       <AmountCard className="col-span-3" title="負債" Icon={RocketIcon} amount={data.liabilities} />
+
+      <div className="col-span-3" />
+      <AmountCard className="col-span-3" title="予想売上" Icon={BarChartIcon} amount={data.estimatedSales} />
+      <AmountCard className="col-span-3" title="予想利益" Icon={StackIcon} amount={data.estimatedProfits} />
+      <div className="col-span-3" />
 
       <Card className="col-span-9">
         <CardHeader>

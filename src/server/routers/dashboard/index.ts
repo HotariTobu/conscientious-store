@@ -30,11 +30,16 @@ export const dashboardRouter = router({
             .reduce((subtotal, { salePrice }) => (
               subtotal + salePrice
             ), 0)
+          const estimatedSales = product.items
+            .reduce((subtotal, { salePrice }) => (
+              subtotal + salePrice
+            ), 0)
           const profits = sales - purchases
           return {
             product,
             purchases,
             sales,
+            estimatedSales,
             profits,
           }
         })
@@ -49,7 +54,13 @@ export const dashboardRouter = router({
           total + sales
         ), 0)
 
+      const estimatedSales = accountTitlesByProduct
+        .reduce((total, { estimatedSales }) => (
+          total + estimatedSales
+        ), 0)
+
       const profits = sales - purchases
+      const estimatedProfits = estimatedSales - purchases
 
       const liabilitiesByShareholder = shareholders
         .map(shareholder => ({
@@ -71,7 +82,9 @@ export const dashboardRouter = router({
         drawer,
         purchases,
         sales,
+        estimatedSales,
         profits,
+        estimatedProfits,
         liabilities,
         accountTitlesByProduct,
         liabilitiesByShareholder,
