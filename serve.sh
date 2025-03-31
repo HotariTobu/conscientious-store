@@ -9,6 +9,7 @@ rm -rf ./node_modules
 rm -rf ./.next
 
 # Check if Node.js is installed
+echo -n 'Node.js '
 node -v
 if [ $? -ne 0 ]; then
     echo "Node.js is not installed. Please install Node.js to run this script from https://nodejs.org."
